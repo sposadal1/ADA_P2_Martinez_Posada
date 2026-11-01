@@ -4,5 +4,6 @@
 #include "utils.h"
 
 BigInt sumar(const BigInt& A, const BigInt& B);
+BigInt restar(const BigInt& A, const BigInt& B); 
 
 #endif

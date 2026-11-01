@@ -15,3 +15,23 @@ BigInt sumar(const BigInt& A, const BigInt& B) {
     }
     return res;
 }
+
+// Precondicion: A >= B
+BigInt restar(const BigInt& A, const BigInt& B) {
+    BigInt res = A;
+    int borrow = 0;
+    for (size_t i = 0; i < res.size(); ++i) {
+        int sub = borrow;
+        if (i < B.size()) sub += B[i];
+        
+        if (res[i] < sub) {
+            res[i] += 10;
+            borrow = 1;
+        } else {
+            borrow = 0;
+        }
+        res[i] -= sub;
+    }
+    trim(res);
+    return res;
+}
