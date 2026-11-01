@@ -10,3 +10,9 @@ void imprimir(const BigInt& A) {
     }
     std::cout << std::endl;
 }
+
+void trim(BigInt& A) {
+    while (A.size() > 1 && A.back() == 0) {
+        A.pop_back();
+    }
+}

@@ -7,5 +7,6 @@
 using BigInt = std::vector<int>;
 
 void imprimir(const BigInt& A);
+void trim(BigInt& A);
 
 #endif
