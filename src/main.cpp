@@ -1,5 +1,6 @@
 #include "operaciones.h"
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
@@ -29,7 +30,7 @@ void probarCaso(const std::string& nombre, const std::string& sA, const std::str
 
 void ejecutarValidacionesObligatorias() {
     std::cout << "==========================================================" << std::endl;
-    std::cout << "     PRUEBAS DE VALIDACION     " << std::endl;
+    std::cout << "     PRUEBAS DE VALIDACION OBLIGATORIAS     " << std::endl;
     std::cout << "==========================================================" << std::endl;
     
     probarCaso("1. Numeros de 1 digito", "7", "8");
@@ -49,13 +50,16 @@ void ejecutarValidacionesObligatorias() {
 
 void ejecutarBenchmark() {
     std::cout << "==========================================================" << std::endl;
-    std::cout << "    BENCHMARK   " << std::endl;
+    std::cout << "    BENCHMARK OFICIAL    " << std::endl;
     std::cout << "==========================================================" << std::endl;
     std::cout << std::setw(10) << "Digitos (N)" 
               << std::setw(18) << "Clasica (ms)" 
               << std::setw(18) << "Karatsuba (ms)" 
               << std::setw(12) << "Estado" << std::endl;
     std::cout << "----------------------------------------------------------" << std::endl;
+
+    std::ofstream archivoCsv("tiempos.csv");
+    archivoCsv << "N,Clasica_ms,Karatsuba_ms\n";
 
     std::vector<int> tamanos = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
     
@@ -71,7 +75,6 @@ void ejecutarBenchmark() {
             BigInt A = generarBigIntAleatorio(n);
             BigInt B = generarBigIntAleatorio(n);
 
-            // Medición con std::chrono::steady_clock
             auto t1 = std::chrono::steady_clock::now();
             BigInt resC = multiplicacionClasica(A, B);
             auto t2 = std::chrono::steady_clock::now();
@@ -89,12 +92,16 @@ void ejecutarBenchmark() {
         double promedioC = sumaTiempoClasico / repeticiones;
         double promedioK = sumaTiempoKaratsuba / repeticiones;
 
+        archivoCsv << n << "," << promedioC << "," << promedioK << "\n";
+
         std::cout << std::setw(10) << n 
                   << std::setw(18) << std::fixed << std::setprecision(4) << promedioC
                   << std::setw(18) << std::fixed << std::setprecision(4) << promedioK
                   << std::setw(12) << (todoCorrecto ? "PASO" : "ERROR") << std::endl;
     }
+    archivoCsv.close();
     std::cout << "==========================================================" << std::endl;
+    std::cout << "Resultados exportados a tiempos.csv exitosamente." << std::endl;
 }
 
 int main() {

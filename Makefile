@@ -1,14 +1,19 @@
 CXX = g++
-CXXFLAGS = -O2 -Wall -Wextra -std=c++11 -Iinclude
+CXXFLAGS = -O2 -Iinclude -Wall
 
-SRCS = src/utils.cpp src/operaciones.cpp src/karatsuba.cpp src/main.cpp
+SRCS = src/utils.cpp src/operaciones.cpp src/main.cpp
 OBJS = $(SRCS:.cpp=.o)
-TARGET = main
+TARGET = main.exe
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
 
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 clean:
-	rm -f src/*.o $(TARGET)
+	del /f /q src\*.o $(TARGET) 2>nul || rm -f src/*.o $(TARGET)
+
+.PHONY: all clean
