@@ -35,3 +35,11 @@ BigInt restar(const BigInt& A, const BigInt& B) {
     trim(res);
     return res;
 }
+
+// Devuelve A * 10^k insertando k ceros al inicio (representacion Little-Endian)
+BigInt desplazar(const BigInt& A, int k) {
+    if (A.size() == 1 && A[0] == 0) return A;
+    BigInt res = A;
+    res.insert(res.begin(), k, 0);
+    return res;
+}

@@ -5,5 +5,6 @@
 
 BigInt sumar(const BigInt& A, const BigInt& B);
 BigInt restar(const BigInt& A, const BigInt& B); 
+BigInt desplazar(const BigInt& A, int k);
 
 #endif
