@@ -84,5 +84,13 @@ BigInt karatsuba(const BigInt& A, const BigInt& B) {
     partir(A, m, A_alta, A_baja);
     partir(B, m, B_alta, B_baja);
 
+    // Calculo recursivo de los 3 productos
+    BigInt P1 = karatsuba(A_alta, B_alta);
+    BigInt P2 = karatsuba(A_baja, B_baja);
+    
+    BigInt suma_A = sumar(A_alta, A_baja);
+    BigInt suma_B = sumar(B_alta, B_baja);
+    BigInt P3 = karatsuba(suma_A, suma_B);
+
     return {0}; 
 }
