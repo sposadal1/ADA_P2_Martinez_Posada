@@ -1,6 +1,12 @@
 #include "operaciones.h"
 #include <algorithm>
 
+static int siguientePotenciaDe2(int n) {
+    int p = 1;
+    while (p < n) p <<= 1;
+    return p;
+}
+
 BigInt sumar(const BigInt& A, const BigInt& B) {
     BigInt res;
     int carry = 0;
@@ -71,7 +77,8 @@ BigInt multiplicacionClasica(const BigInt& A, const BigInt& B) {
     return res;
 }
 
-BigInt karatsuba(const BigInt& A, const BigInt& B) {
+// Funcion recursiva interna de Karatsuba
+static BigInt karatsubaAux(const BigInt& A, const BigInt& B) {
     if (A.size() <= 4 || B.size() <= 4) {
         return multiplicacionClasica(A, B);
     }
@@ -84,21 +91,38 @@ BigInt karatsuba(const BigInt& A, const BigInt& B) {
     partir(A, m, A_alta, A_baja);
     partir(B, m, B_alta, B_baja);
 
-    BigInt P1 = karatsuba(A_alta, B_alta);
-    BigInt P2 = karatsuba(A_baja, B_baja);
+    BigInt P1 = karatsubaAux(A_alta, B_alta);
+    BigInt P2 = karatsubaAux(A_baja, B_baja);
     
     BigInt suma_A = sumar(A_alta, A_baja);
     BigInt suma_B = sumar(B_alta, B_baja);
-    BigInt P3 = karatsuba(suma_A, suma_B);
+    BigInt P3 = karatsubaAux(suma_A, suma_B);
 
-    // P_medio = P3 - P1 - P2
+    // Regla 3: P_medio = (P3 - P1) - P2 para evitar intermedios negativos
     BigInt P_medio = restar(restar(P3, P1), P2);
 
-    // Ensamblar: P1 * 10^(2m) + P_medio * 10^m + P2
     BigInt term1 = desplazar(P1, 2 * m);
     BigInt term2 = desplazar(P_medio, m);
 
     BigInt res = sumar(sumar(term1, term2), P2);
+    trim(res);
+    return res;
+}
+
+// Funcion principal de Karatsuba con relleno a potencia de 2 (Regla 2 de la guia)
+BigInt karatsuba(const BigInt& A, const BigInt& B) {
+    if ((A.size() == 1 && A[0] == 0) || (B.size() == 1 && B[0] == 0)) return {0};
+
+    int maxLen = std::max(A.size(), B.size());
+    int targetLen = siguientePotenciaDe2(maxLen);
+
+    BigInt A_pad = A;
+    BigInt B_pad = B;
+    // En notacion Little-Endian, los ceros a la izquierda quedan al final del vector
+    A_pad.resize(targetLen, 0);
+    B_pad.resize(targetLen, 0);
+
+    BigInt res = karatsubaAux(A_pad, B_pad);
     trim(res);
     return res;
 }
