@@ -43,3 +43,17 @@ BigInt desplazar(const BigInt& A, int k) {
     res.insert(res.begin(), k, 0);
     return res;
 }
+
+// Separa A en su mitad alta y baja respecto a la posicion m.
+void partir(const BigInt& A, int m, BigInt& alta, BigInt& baja) {
+    int n = A.size();
+    if (n <= m) {
+        baja = A;
+        alta = {0};
+    } else {
+        baja = BigInt(A.begin(), A.begin() + m);
+        alta = BigInt(A.begin() + m, A.end());
+    }
+    trim(alta);
+    trim(baja);
+}
