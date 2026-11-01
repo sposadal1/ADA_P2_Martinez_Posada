@@ -57,3 +57,20 @@ void partir(const BigInt& A, int m, BigInt& alta, BigInt& baja) {
     trim(alta);
     trim(baja);
 }
+
+// Algoritmo de multiplicacion clasica de orden cuadratico.
+BigInt multiplicacionClasica(const BigInt& A, const BigInt& B) {
+    if ((A.size() == 1 && A[0] == 0) || (B.size() == 1 && B[0] == 0)) return {0};
+    
+    BigInt res(A.size() + B.size(), 0);
+    for (size_t i = 0; i < A.size(); ++i) {
+        int carry = 0;
+        for (size_t j = 0; j < B.size() || carry; ++j) {
+            long long cur = res[i + j] + A[i] * 1LL * (j < B.size() ? B[j] : 0) + carry;
+            res[i + j] = cur % 10;
+            carry = cur / 10;
+        }
+    }
+    trim(res);
+    return res;
+}
