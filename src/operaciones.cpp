@@ -16,7 +16,6 @@ BigInt sumar(const BigInt& A, const BigInt& B) {
     return res;
 }
 
-// Precondicion: A >= B
 BigInt restar(const BigInt& A, const BigInt& B) {
     BigInt res = A;
     int borrow = 0;
@@ -36,7 +35,6 @@ BigInt restar(const BigInt& A, const BigInt& B) {
     return res;
 }
 
-// Devuelve A * 10^k insertando k ceros al inicio (representacion Little-Endian)
 BigInt desplazar(const BigInt& A, int k) {
     if (A.size() == 1 && A[0] == 0) return A;
     BigInt res = A;
@@ -44,7 +42,6 @@ BigInt desplazar(const BigInt& A, int k) {
     return res;
 }
 
-// Separa A en su mitad alta y baja respecto a la posicion m.
 void partir(const BigInt& A, int m, BigInt& alta, BigInt& baja) {
     int n = A.size();
     if (n <= m) {
@@ -58,7 +55,6 @@ void partir(const BigInt& A, int m, BigInt& alta, BigInt& baja) {
     trim(baja);
 }
 
-// Algoritmo de multiplicacion clasica de orden cuadratico.
 BigInt multiplicacionClasica(const BigInt& A, const BigInt& B) {
     if ((A.size() == 1 && A[0] == 0) || (B.size() == 1 && B[0] == 0)) return {0};
     
@@ -75,13 +71,18 @@ BigInt multiplicacionClasica(const BigInt& A, const BigInt& B) {
     return res;
 }
 
-// Algoritmo de multiplicacion de Karatsuba O(n^1.585)
 BigInt karatsuba(const BigInt& A, const BigInt& B) {
-    // Caso base: Para numeros pequeños (<= 4 digitos), la multiplicacion clasica es mas eficiente
     if (A.size() <= 4 || B.size() <= 4) {
         return multiplicacionClasica(A, B);
     }
 
-    // Proximos commits: division en mitades y llamadas recursivas
+    int m = std::max(A.size(), B.size()) / 2;
+
+    BigInt A_alta, A_baja;
+    BigInt B_alta, B_baja;
+
+    partir(A, m, A_alta, A_baja);
+    partir(B, m, B_alta, B_baja);
+
     return {0}; 
 }
