@@ -74,3 +74,14 @@ BigInt multiplicacionClasica(const BigInt& A, const BigInt& B) {
     trim(res);
     return res;
 }
+
+// Algoritmo de multiplicacion de Karatsuba O(n^1.585)
+BigInt karatsuba(const BigInt& A, const BigInt& B) {
+    // Caso base: Para numeros pequeños (<= 4 digitos), la multiplicacion clasica es mas eficiente
+    if (A.size() <= 4 || B.size() <= 4) {
+        return multiplicacionClasica(A, B);
+    }
+
+    // Proximos commits: division en mitades y llamadas recursivas
+    return {0}; 
+}

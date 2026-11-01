@@ -8,5 +8,6 @@ BigInt restar(const BigInt& A, const BigInt& B);
 BigInt desplazar(const BigInt& A, int k);
 void partir(const BigInt& A, int m, BigInt& alta, BigInt& baja);
 BigInt multiplicacionClasica(const BigInt& A, const BigInt& B);
+BigInt karatsuba(const BigInt& A, const BigInt& B);
 
 #endif
