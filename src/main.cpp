@@ -2,36 +2,49 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
+#include <iomanip>
+#include <vector>
+
+void medirTiempos(int digitos) {
+    BigInt A = generarBigIntAleatorio(digitos);
+    BigInt B = generarBigIntAleatorio(digitos);
+
+    // Medicion Clasica
+    auto inicioClasico = std::chrono::high_resolution_clock::now();
+    BigInt resClasico = multiplicacionClasica(A, B);
+    auto finClasico = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> tiempoClasico = finClasico - inicioClasico;
+
+    // Medicion Karatsuba
+    auto inicioKaratsuba = std::chrono::high_resolution_clock::now();
+    BigInt resKaratsuba = karatsuba(A, B);
+    auto finKaratsuba = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> tiempoKaratsuba = finKaratsuba - inicioKaratsuba;
+
+    // Verificación de corrección
+    bool correcto = (resClasico == resKaratsuba);
+
+    std::cout << std::setw(10) << digitos 
+              << std::setw(18) << std::fixed << std::setprecision(3) << tiempoClasico.count()
+              << std::setw(18) << std::fixed << std::setprecision(3) << tiempoKaratsuba.count()
+              << std::setw(15) << (correcto ? "PASO" : "ERROR") << std::endl;
+}
 
 int main() {
     srand(time(0));
 
-    // Validacion 1: Casos fijos
-    BigInt A = {2, 5}; // 52
-    BigInt B = {3, 1}; // 13
-    
-    std::cout << "Prueba Clasica (52 x 13):   ";
-    imprimir(multiplicacionClasica(A, B));
-    std::cout << "Prueba Karatsuba (52 x 13): ";
-    imprimir(karatsuba(A, B));
+    std::cout << "      BENCHMARK: MULTIPLICACION CLASICA VS KARATSUBA      " << std::endl;
+    std::cout << "==========================================================" << std::endl;
+    std::cout << std::setw(10) << "Digitos (N)" 
+              << std::setw(18) << "Clasica (ms)" 
+              << std::setw(18) << "Karatsuba (ms)" 
+              << std::setw(15) << "Estado" << std::endl;
+    std::cout << "----------------------------------------------------------" << std::endl;
 
-    // Validacion 2: Comparacion cruzada con 10 digitos aleatorios
-    BigInt C = generarBigIntAleatorio(10);
-    BigInt D = generarBigIntAleatorio(10);
-
-    BigInt resClasico = multiplicacionClasica(C, D);
-    BigInt resKaratsuba = karatsuba(C, D);
-
-    std::cout << "\nPrueba de verificacion (10 digitos aleatorios):" << std::endl;
-    std::cout << "Resultado Clasica:   ";
-    imprimir(resClasico);
-    std::cout << "Resultado Karatsuba: ";
-    imprimir(resKaratsuba);
-
-    if (resClasico == resKaratsuba) {
-        std::cout << "\n[OK] Los resultados de Karatsuba y Clasica coinciden exitosamente." << std::endl;
-    } else {
-        std::cout << "\n[ERROR] Los resultados no coinciden." << std::endl;
+    std::vector<int> tamanos = {100, 500, 1000, 2000, 5000};
+    for (int n : tamanos) {
+        medirTiempos(n);
     }
 
     return 0;
